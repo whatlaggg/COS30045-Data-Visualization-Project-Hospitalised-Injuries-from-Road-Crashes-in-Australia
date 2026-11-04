@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#14243d">
+  <meta name="description" content="Interactive Australian road injury hospitalisation dashboard, 2011 to 2021. Built with D3.js and the verified KNIME dataset.">
+  <title>RoadLens — Australian Road Injury Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" aria-label="Main navigation">
+    <a href="#overview" class="brand" id="brand-link" aria-label="RoadLens home">
+      <span class="brand-mark" aria-hidden="true"><span class="mark-line"></span><span class="mark-dot"></span></span>
+      <span><strong>road<span>lens</span></strong><small>DATA STORY / AUSTRALIA</small></span>
+    </a>
+    <div class="side-kicker">THE STORY</div>
+    <nav class="nav-list" aria-label="Dashboard pages">
+      <button type="button" data-page="overview" class="nav-item active"><span class="nav-number">01</span><span><strong>National overview</strong><small>The big picture</small></span><span class="nav-chevron">›</span></button>
+      <button type="button" data-page="people" class="nav-item"><span class="nav-number">02</span><span><strong>People & places</strong><small>Who is affected</small></span><span class="nav-chevron">›</span></button>
+      <button type="button" data-page="burden" class="nav-item"><span class="nav-number">03</span><span><strong>Hospital burden</strong><small>Beyond case counts</small></span><span class="nav-chevron">›</span></button>
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <div class="side-card">
+      <div class="side-card-heading"><span class="status-dot"></span> DATASET STATUS</div>
+      <div class="side-metric"><strong>2,793</strong><span>records analyzed</span></div>
+      <div class="integrity-bar"><span></span></div>
+      <div class="integrity-row"><span>Verified data</span><strong>91.4%</strong></div>
+      <p>239 records contain suppressed values and are excluded from verified charts.</p>
+    </div>
+    <div class="sidebar-footer">Source: cleaned KNIME export<br>Historical data · 2011–2021</div>
+  </aside>
+
+  <div class="main-column">
+    <header class="topbar">
+      <div class="topbar-left"><button class="mobile-menu" id="menu-toggle" type="button" aria-label="Toggle navigation">☰</button><span class="topbar-subject">AUSTRALIAN ROAD SAFETY</span><span class="topbar-divider"></span><span class="topbar-subtle">Interactive data explorer</span></div>
+      <div class="topbar-right"><span class="header-badge"><span class="status-dot"></span> VERIFIED MEASURES</span><button id="download-btn" type="button" class="button button-soft" title="Download verified rows for the selected year">↓ <span>Export year CSV</span></button></div>
+    </header>
+    <main class="content" id="main-content">
+      <div class="controls-bar">
+        <div class="breadcrumb"><span>AUSTRALIA</span><span class="crumb-divider">/</span><span id="breadcrumb-page">National overview</span></div>
+        <div class="year-controls" aria-label="Select analysis year"><span class="year-label">FOCUS YEAR</span><button id="year-prev" class="year-arrow" type="button" aria-label="Previous year">‹</button><select id="year-select" aria-label="Year"></select><button id="year-next" class="year-arrow" type="button" aria-label="Next year">›</button></div>
+      </div>
+
+      <section id="page-overview" class="page active" aria-labelledby="overview-title">
+        <div class="hero hero-overview">
+          <div class="hero-copy"><div class="eyebrow"><span class="eyebrow-line"></span> CHAPTER ONE · THE BIG PICTURE</div><h1 id="overview-title">Road injuries in<br><em>Australia.</em></h1><p>Track hospitalisation trends and healthcare demand over eleven years of Australian road injury data.</p></div>
+          <div class="hero-aside"><div class="hero-orbit"><span class="hero-orbit-inner"><strong>11</strong><small>YEARS OF DATA</small></span></div><div class="hero-period">2011 <span>—</span> 2021</div></div>
+        </div>
+        <div class="kpi-grid">
+          <article class="kpi kpi-blue"><div class="kpi-head"><span>Total hospitalisations</span><span class="kpi-symbol">↗</span></div><div class="kpi-value" id="overview-hosp">—</div><div class="kpi-foot" id="overview-hosp-change">—</div></article>
+          <article class="kpi kpi-orange"><div class="kpi-head"><span>Total hospital bed-days</span><span class="kpi-symbol">▥</span></div><div class="kpi-value" id="overview-days">—</div><div class="kpi-foot" id="overview-days-change">—</div></article>
+          <article class="kpi kpi-teal"><div class="kpi-head"><span>Average bed-days per case</span><span class="kpi-symbol">◷</span></div><div class="kpi-value" id="overview-ratio">—</div><div class="kpi-foot" id="overview-ratio-change">—</div></article>
+        </div>
+        <div class="chart-grid chart-grid-overview">
+          <article class="panel span-7"><div class="panel-top"><div><div class="panel-overline">01 / VOLUME OVER TIME</div><h2>Injury hospitalisations</h2><p>National recorded hospitalisations, 2011–2021</p></div><span class="chart-chip chip-blue">Annual cases</span></div><div class="chart" id="chart-national-trend" role="img" aria-label="Line chart of national road injury hospitalisations by year"></div><div class="panel-foot"><span class="legend-dot blue"></span><span>Hover over points for yearly values</span><span class="panel-end">Selected year <b class="selected-year-text">2021</b></span></div></article>
+          <article class="panel span-5"><div class="panel-top"><div><div class="panel-overline">02 / SYSTEM DEMAND</div><h2>Hospital bed-days</h2><p>Annual total days of hospital care</p></div><span class="chart-chip chip-orange">Bed-days</span></div><div class="chart" id="chart-bed-days" role="img" aria-label="Bar chart of national road injury hospital bed-days by year"></div><div class="panel-foot"><span class="legend-dot orange"></span><span>Bars represent annual totals</span></div></article>
+        </div>
+        <div class="story-grid"><article class="insight-card"><span class="insight-icon">✦</span><div><div class="insight-overline">THE HEADLINE</div><h3 id="overview-insight-title">A decade of change</h3><p id="overview-insight-body"></p></div></article><article class="note-card"><div class="note-icon">ⓘ</div><div><strong>How to read these figures</strong><p>The national view uses only <code>national / total</code> records. Values are hospitalisations, not crash totals or population-adjusted injury rates.</p></div></article></div>
+        <div class="page-next"><span>UP NEXT <strong>Who is affected by road injuries?</strong></span><button type="button" class="button button-dark" data-go="people">Explore people & places <span>→</span></button></div>
+      </section>
+
+      <section id="page-people" class="page" aria-labelledby="people-title">
+        <div class="section-heading"><div><div class="eyebrow dark"><span class="eyebrow-line"></span> CHAPTER TWO · WHO & WHERE</div><h1 id="people-title">People & <em>places.</em></h1><p>Break down the national picture by geography, demographics, and road-user type.</p></div><div class="heading-year"><span>VIEWING</span><strong class="selected-year-text">2021</strong></div></div>
+        <div class="section-highlight"><span class="highlight-icon">◎</span><div><strong id="people-headline">Different groups, different patterns.</strong><p id="people-summary"></p></div></div>
+        <div class="chart-grid">
+          <article class="panel span-7"><div class="panel-top"><div><div class="panel-overline">03 / GEOGRAPHY</div><h2>State & territory comparison</h2><p>Verified hospitalisations by location</p></div><span class="chart-chip chip-blue">8 regions</span></div><div class="chart tall" id="chart-states" role="img" aria-label="Ranked bar chart of road injury hospitalisations across Australian states and territories"></div><div class="panel-foot"><span class="legend-dot blue"></span><span>Counts, not population-adjusted rates</span></div></article>
+          <article class="panel span-5"><div class="panel-top"><div><div class="panel-overline">04 / SEX</div><h2>Hospitalisations by sex</h2><p>Share of national cases by sex</p></div><span class="chart-chip chip-teal">National</span></div><div class="chart tall" id="chart-sex" role="img" aria-label="Donut chart of road injury hospitalisations by sex"></div><div id="sex-legend" class="donut-legend"></div></article>
+          <article class="panel span-5"><div class="panel-top"><div><div class="panel-overline">05 / AGE</div><h2>Age groups</h2><p>Number of hospitalisations by age bracket</p></div><span class="chart-chip chip-teal">National</span></div><div class="chart medium" id="chart-age" role="img" aria-label="Bar chart of national road injury hospitalisations by age group"></div><div class="panel-foot"><span class="legend-dot teal"></span><span>Age is grouped into source categories</span></div></article>
+          <article class="panel span-7"><div class="panel-top"><div><div class="panel-overline">06 / ROAD USERS</div><h2>Which road users are most affected?</h2><p>Six highest categories by hospitalisations</p></div><span class="chart-chip chip-orange">Top 6</span></div><div class="chart medium" id="chart-road-users" role="img" aria-label="Ranked bar chart of road injury hospitalisations by road-user category"></div><div class="panel-foot"><span class="legend-dot orange"></span><span>National road-user categories</span></div></article>
+        </div>
+        <article class="note-card wide-note"><div class="note-icon">!</div><div><strong>Important: comparisons, not rates</strong><p>State, sex, age and road-user breakdowns are separate analytical views. Do not add them together. Larger counts do not necessarily indicate higher individual risk; calculating risk requires appropriate population or travel-exposure denominators.</p></div></article>
+        <div class="page-next"><span>UP NEXT <strong>What burden do these injuries place on hospitals?</strong></span><button type="button" class="button button-dark" data-go="burden">Explore hospital burden <span>→</span></button></div>
+      </section>
+
+      <section id="page-burden" class="page" aria-labelledby="burden-title">
+        <div class="section-heading"><div><div class="eyebrow dark"><span class="eyebrow-line"></span> CHAPTER THREE · BEYOND THE COUNTS</div><h1 id="burden-title">Hospital <em>burden.</em></h1><p>Understand bed-day demand and why case frequency is only part of the story.</p></div><div class="heading-year"><span>VIEWING</span><strong class="selected-year-text">2021</strong></div></div>
+        <div class="kpi-grid">
+          <article class="kpi kpi-orange"><div class="kpi-head"><span>Total national bed-days</span><span class="kpi-symbol">▥</span></div><div class="kpi-value" id="burden-days">—</div><div class="kpi-foot">Across all national hospitalisations</div></article>
+          <article class="kpi kpi-teal"><div class="kpi-head"><span>National bed-days / case</span><span class="kpi-symbol">◷</span></div><div class="kpi-value" id="burden-average">—</div><div class="kpi-foot">National total-based ratio</div></article>
+          <article class="kpi kpi-blue"><div class="kpi-head"><span>Highest average among groups</span><span class="kpi-symbol">↗</span></div><div class="kpi-value" id="burden-peak">—</div><div class="kpi-foot" id="burden-peak-label">—</div></article>
+        </div>
+        <div class="chart-grid">
+          <article class="panel span-5"><div class="panel-top"><div><div class="panel-overline">07 / AVERAGE STAY</div><h2>Bed-days per case</h2><p>National average length-of-stay indicator</p></div><span class="chart-chip chip-teal">Days / case</span></div><div class="chart" id="chart-ratio-trend" role="img" aria-label="Line chart of national hospital bed-days per case by year"></div><div class="panel-foot"><span class="legend-dot teal"></span><span>Computed as bed-days ÷ cases</span></div></article>
+          <article class="panel span-7"><div class="panel-top"><div><div class="panel-overline">08 / WHO STAYS LONGER</div><h2>Average bed-days by road user</h2><p>Top eight groups by bed-days per case</p></div><span class="chart-chip chip-orange">Top 8</span></div><div class="chart" id="chart-ratio-groups" role="img" aria-label="Bar chart comparing average hospital bed-days per case by road-user category"></div><div class="panel-foot"><span class="legend-dot orange"></span><span>Only verified counts used in ratios</span></div></article>
+          <article class="panel span-8"><div class="panel-top"><div><div class="panel-overline">09 / THE RELATIONSHIP</div><h2>Case volume vs hospital demand</h2><p>Each circle represents one road-user category</p></div><span class="chart-chip chip-blue">Interactive scatter</span></div><div class="chart scatter-chart" id="chart-scatter" role="img" aria-label="Scatter plot comparing hospitalisations and hospital bed-days across road user categories"></div><div class="panel-foot"><span class="legend-dot blue"></span><span>Click a circle to inspect a category</span></div></article>
+          <article class="panel span-4 detail-panel"><div class="panel-top"><div><div class="panel-overline">10 / SELECTED CATEGORY</div><h2>Road-user detail</h2><p>Choose a group on the chart</p></div></div><label for="road-user-select" class="detail-label">ROAD-USER GROUP</label><select id="road-user-select" class="detail-select" aria-label="Choose road-user group"></select><div class="detail-hero"><span id="detail-name">Car driver</span><strong id="detail-average">—</strong><small>BED-DAYS PER HOSPITALISATION</small></div><div class="detail-rows"><div><span>Hospitalisations</span><strong id="detail-cases">—</strong></div><div><span>Total bed-days</span><strong id="detail-days">—</strong></div><div><span>National average</span><strong id="detail-national">—</strong></div></div><p class="detail-disclaimer">A longer stay is not a direct measure of clinical injury severity.</p></article>
+        </div>
+        <article class="insight-card burden-takeaway"><span class="insight-icon">✦</span><div><div class="insight-overline">WHAT THIS TELLS US</div><h3 id="burden-insight-title">Frequency and burden tell different stories</h3><p id="burden-insight-body"></p></div></article>
+        <div class="page-next"><span>STORY COMPLETE <strong>Revisit the national picture</strong></span><button type="button" class="button button-dark" data-go="overview">Back to overview <span>↗</span></button></div>
+      </section>
+
+      <footer class="app-footer"><span>ROADLENS / AUSTRALIAN ROAD INJURIES · 2011–2021</span><span>Built with <strong>D3.js</strong> · Verified data from uploaded KNIME workflow</span></footer>
+    </main>
+  </div>
+</div>
+<div id="chart-tooltip" class="chart-tooltip" role="status" aria-live="polite"></div>
+<script src="vendor/d3.v3.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
