@@ -4,7 +4,7 @@ function render() {
     if (state.page === 'overview') {
         drawNationalTrend(); drawBedDays(); drawYearChange();
     } else if (state.page === 'people') {
-        drawStateHeatmap(); drawSexDumbbell(); drawAgeGroups(); drawRoadUsers();
+        drawStateHeatmap(); drawSexTrend(); drawAgeGroups(); drawRoadUsers();
     } else if (state.page === 'burden') {
         drawRatioTrend(); updateRoadUserDetail(); drawRatioGroups(); drawScatterplot();
     }

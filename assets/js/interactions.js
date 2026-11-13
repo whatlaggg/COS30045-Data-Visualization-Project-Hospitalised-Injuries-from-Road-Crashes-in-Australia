@@ -66,6 +66,10 @@ function setYear(year) {
 }
 // Populate controls and attach navigation, selection and resize events once.
 function initialiseInteractions() {
+    document.getElementById('sex-state-select').addEventListener('change', function() {
+        hideTip();
+        drawSexTrend();
+    });
     years.forEach(function(y) {
         var opt = document.createElement('option');
         opt.value = y;
