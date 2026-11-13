@@ -52,6 +52,7 @@ function drawAgeGroups() {
         }) || 1,
         y = d3.scaleLinear()
         .domain([0, max * 1.12])
+        .nice(4)
         .range([H, 0]);
 
     // Draw grid lines and axes to support value comparison.
