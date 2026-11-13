@@ -15,7 +15,7 @@ function drawRatioGroups() {
         value: ratio,
         valueFormat: decimals,
         axisFormat: n => n.toFixed(0),
-        color: C.orange,
+        color: C.blue,
         left: 166,
         right: 45,
         truncate: 29,

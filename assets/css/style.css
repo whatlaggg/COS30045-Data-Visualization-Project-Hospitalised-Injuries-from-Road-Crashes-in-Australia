@@ -1,19 +1,19 @@
 :root {
-    --navy: #14243d;
-    --navy-dark: #0f1e34;
-    --navy-2: #1c3150;
-    --ink: #1c304c;
-    --muted: #718097;
-    --line: #e5ebf3;
-    --bg: #f5f7fa;
+    --navy: #0d47a1;
+    --navy-dark: #0d47a1;
+    --navy-2: #2196f3;
+    --ink: #0d47a1;
+    --muted: #416b91;
+    --line: #90caf9;
+    --bg: #e3f2fd;
     --white: #fff;
-    --blue: #4778de;
-    --blue-light: #eaf0ff;
-    --teal: #16a18c;
-    --teal-light: #e7f8f5;
-    --orange: #ed9950;
-    --orange-light: #fff2e7;
-    --shadow: 0 5px 24px rgba(24, 46, 83, .035)
+    --blue: #2196f3;
+    --blue-light: #e3f2fd;
+    --teal: #2196f3;
+    --teal-light: #e3f2fd;
+    --orange: #0d47a1;
+    --orange-light: #e3f2fd;
+    --shadow: 0 5px 24px rgba(13, 71, 161, .08)
 }
 
 * {
@@ -44,7 +44,7 @@ button {
 button:focus-visible,
 select:focus-visible,
 a:focus-visible {
-    outline: 3px solid #8db1ff;
+    outline: 3px solid #2196f3;
     outline-offset: 3px
 }
 
@@ -103,7 +103,7 @@ p {
 .mark-line {
     height: 18px;
     width: 4px;
-    background: #e7a76b;
+    background: #90caf9;
     border-radius: 4px;
     transform: rotate(30deg)
 }
@@ -112,7 +112,7 @@ p {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #e7a76b;
+    background: #90caf9;
     position: absolute;
     top: 5px;
     right: 6px
@@ -127,7 +127,7 @@ p {
 }
 
 .brand strong span {
-    color: #f4a76d
+    color: #90caf9
 }
 
 .brand small {
@@ -167,15 +167,15 @@ p {
 }
 
 .nav-item:hover {
-    background: #1c304f;
+    background: #0d47a1;
     color: #fff
 }
 
 .nav-item.active {
-    background: #263c5a;
-    color: white;
-    border-color: #355171;
-    box-shadow: inset 3px 0 0 #f1a06b
+    background: #90caf9;
+    color: #0d47a1;
+    border-color: #90caf9;
+    box-shadow: inset 3px 0 0 #90caf9
 }
 
 .nav-number {
@@ -190,12 +190,12 @@ p {
     font-weight: 800;
     letter-spacing: .5px;
     color: #95aaca;
-    background: #1b2b46
+    background: #0d47a1
 }
 
 .nav-item.active .nav-number {
-    color: #ffd7b9;
-    background: #344c6b
+    color: #e3f2fd;
+    background: #0d47a1
 }
 
 .nav-item strong {
@@ -213,7 +213,7 @@ p {
 }
 
 .nav-item.active small {
-    color: #adc0d5
+    color: #0d47a1
 }
 
 .nav-chevron {
@@ -269,9 +269,9 @@ p {
 }
 
 .header-badge {
-    background: #f0faf7;
-    border: 1px solid #d4f0e7;
-    color: #228572;
+    background: #e3f2fd;
+    border: 1px solid #90caf9;
+    color: #0d47a1;
     display: flex;
     align-items: center;
     gap: 9px;
@@ -302,22 +302,22 @@ p {
 }
 
 .button-soft {
-    background: #edf2f9;
+    background: #e3f2fd;
     color: #304765
 }
 
 .button-soft:hover {
-    background: #e3eafa
+    background: #90caf9
 }
 
 .button-dark {
-    background: #1c304f;
+    background: #0d47a1;
     color: white;
     padding: 13px 18px
 }
 
 .button-dark:hover {
-    background: #2a496f
+    background: #2196f3
 }
 
 .button-dark span {
@@ -329,7 +329,7 @@ p {
 .mobile-menu {
     display: none;
     border: 0;
-    background: #edf2fa;
+    background: #e3f2fd;
     color: var(--ink);
     border-radius: 6px;
     padding: 8px
@@ -390,7 +390,7 @@ p {
 
 .year-arrow {
     border: 0;
-    background: #edf2f8;
+    background: #e3f2fd;
     color: #43546e;
     border-radius: 6px;
     width: 30px;
@@ -400,7 +400,7 @@ p {
 }
 
 .year-arrow:hover {
-    background: #dce8f7
+    background: #90caf9
 }
 
 .year-arrow:disabled {
@@ -459,7 +459,7 @@ p {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 76% 130%, rgba(64, 110, 159, .27), transparent 45%), repeating-linear-gradient(145deg, transparent 0, transparent 53px, rgba(255, 255, 255, .022) 54px, transparent 55px);
+    background: radial-gradient(ellipse at 76% 130%, rgba(144, 202, 249, .27), transparent 45%), repeating-linear-gradient(145deg, transparent 0, transparent 53px, rgba(255, 255, 255, .022) 54px, transparent 55px);
     pointer-events: none
 }
 
@@ -473,14 +473,14 @@ p {
     align-items: center;
     gap: 9px;
     font-size: 10px;
-    color: #f3aa7b;
+    color: #90caf9;
     letter-spacing: 2px;
     font-weight: 850;
     margin-bottom: 17px
 }
 
 .eyebrow.dark {
-    color: #d38750
+    color: #0d47a1
 }
 
 .eyebrow-line {
@@ -502,7 +502,11 @@ p {
 .hero h1 em,
 .section-heading h1 em {
     font-style: normal;
-    color: #f1a66a
+    color: #90caf9
+}
+
+.section-heading h1 em {
+    color: #0d47a1
 }
 
 .hero p {
@@ -522,7 +526,7 @@ p {
 }
 
 .hero-orbit {
-    border: 1px dashed #49617e;
+    border: 1px dashed #90caf9;
     width: 140px;
     height: 140px;
     border-radius: 50%;
@@ -562,7 +566,7 @@ p {
 }
 
 .hero-period span {
-    color: #f1a66a;
+    color: #90caf9;
     padding: 0 9px
 }
 
@@ -625,7 +629,7 @@ p {
 
 .kpi-orange .kpi-symbol {
     background: var(--orange-light);
-    color: #df8843
+    color: #0d47a1
 }
 
 .kpi-teal .kpi-symbol {
@@ -649,12 +653,12 @@ p {
 }
 
 .delta-up {
-    color: #c17230;
+    color: #0d47a1;
     font-weight: 800
 }
 
 .delta-down {
-    color: #258775;
+    color: #0d47a1;
     font-weight: 800
 }
 
@@ -731,18 +735,18 @@ p {
 }
 
 .chip-blue {
-    background: #eef3ff;
-    color: #5981db
+    background: #e3f2fd;
+    color: #0d47a1
 }
 
 .chip-orange {
-    background: #fff3e8;
-    color: #d78d52
+    background: #e3f2fd;
+    color: #0d47a1
 }
 
 .chip-teal {
-    background: #e9f7f4;
-    color: #238e7c
+    background: #e3f2fd;
+    color: #0d47a1
 }
 
 .chart {
@@ -818,8 +822,8 @@ p {
 }
 
 .insight-card {
-    background: #eaf2fc;
-    border: 1px solid #d7e6f8;
+    background: #e3f2fd;
+    border: 1px solid #90caf9;
     border-radius: 11px;
     padding: 22px 24px;
     display: flex;
@@ -835,8 +839,8 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #416bba;
-    background: #d9e8ff;
+    color: #0d47a1;
+    background: #90caf9;
     font-size: 20px
 }
 
@@ -874,8 +878,8 @@ p {
 
 .note-icon {
     font-size: 17px;
-    background: #fff2e4;
-    color: #d28a51;
+    background: #e3f2fd;
+    color: #0d47a1;
     width: 34px;
     height: 34px;
     flex: 0 0 34px;
@@ -980,8 +984,8 @@ p {
 }
 
 .section-highlight {
-    background: #edf3fc;
-    border: 1px solid #dce6f4;
+    background: #e3f2fd;
+    border: 1px solid #90caf9;
     display: flex;
     gap: 15px;
     align-items: center;
@@ -997,8 +1001,8 @@ p {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: #dbe9ff;
-    color: #4672bb;
+    background: #90caf9;
+    color: #0d47a1;
     font-size: 22px;
     flex: 0 0 36px
 }
@@ -1076,7 +1080,7 @@ p {
 }
 
 .detail-hero {
-    background: #eff5fb;
+    background: #e3f2fd;
     border-radius: 10px;
     padding: 22px 10px;
     text-align: center;
@@ -1167,7 +1171,7 @@ p {
     transition: opacity .1s;
     min-width: 135px;
     max-width: 255px;
-    background: rgba(21, 39, 64, .96);
+    background: rgba(13, 71, 161, .96);
     color: white;
     box-shadow: 0 10px 26px rgba(19, 35, 57, .23);
     border: 1px solid #41546e;
@@ -1231,21 +1235,21 @@ p {
 }
 
 .focus-line {
-    stroke: #f3a15f;
+    stroke: #2196f3;
     stroke-width: 1.5;
     stroke-dasharray: 4 4
 }
 
 .selected-ring {
     fill: white;
-    stroke: #4778de;
+    stroke: #2196f3;
     stroke-width: 3
 }
 
 .chart-selected-text {
     font-size: 10px;
     font-weight: 800;
-    fill: #d7894c
+    fill: #0d47a1
 }
 
 .chart-empty {
@@ -1562,7 +1566,7 @@ p {
 
 #loading-status {
     padding: 16px;
-    background: #fff2e7;
+    background: #e3f2fd;
 }
 
 .donut-legend .label {

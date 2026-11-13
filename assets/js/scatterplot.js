@@ -93,7 +93,7 @@ function drawScatterplot() {
             return d.category === state.roadUser ? .94 : .63;
         })
         .attr('stroke', function(d) {
-            return d.category === state.roadUser ? '#d77d37' : 'white';
+            return d.category === state.roadUser ? '#0d47a1' : 'white';
         })
         .attr('stroke-width', function(d) {
             return d.category === state.roadUser ? 2 : 1.5;

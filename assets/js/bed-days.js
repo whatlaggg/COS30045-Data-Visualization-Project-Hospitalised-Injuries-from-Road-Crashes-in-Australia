@@ -6,11 +6,11 @@ function drawBedDays() {
     const selector = '#chart-bed-days',
         rows = nationalTotals;
     const opt = {
-        color: C.orange,
+        color: C.blue,
         key: d => d.year,
         value: d => d.days,
         selectedKey: state.year,
-        selectedColor: '#cc7441',
+        selectedColor: '#0d47a1',
         tooltipLabel: 'Total hospital bed-days',
         left: 54,
         compactYears: true
@@ -90,7 +90,7 @@ function drawBedDays() {
         })
         .attr('rx', 3)
         .attr('fill', function(d) {
-            return opt.selectedKey && String(opt.key(d)) === String(opt.selectedKey) ? opt.selectedColor || '#ed9950' : opt.color;
+            return opt.selectedKey && String(opt.key(d)) === String(opt.selectedKey) ? opt.selectedColor || C.orange : opt.color;
         })
         .style('opacity', function(d) {
             return opt.selectedKey && String(opt.key(d)) !== String(opt.selectedKey) ? .62 : .93;

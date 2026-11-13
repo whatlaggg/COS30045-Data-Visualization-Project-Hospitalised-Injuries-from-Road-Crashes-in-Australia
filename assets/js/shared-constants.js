@@ -1,13 +1,13 @@
 "use strict";
 // Shared palette and application state; chart scales stay inside each chart.
 const C = {
-    blue: '#4778de',
-    blue2: '#6a9bfa',
-    teal: '#16a18c',
-    orange: '#ed9950',
-    ink: '#213957',
-    muted: '#7c8da4',
-    grid: '#e9eef5'
+    blue: '#2196f3',
+    blue2: '#90caf9',
+    teal: '#2196f3',
+    orange: '#0d47a1',
+    ink: '#0d47a1',
+    muted: '#416b91',
+    grid: '#e3f2fd'
 };
 const N = d3.format(',d'),
     F = d3.format(',.2f');

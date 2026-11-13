@@ -92,7 +92,7 @@ function drawAgeGroups() {
         })
         .attr('rx', 3)
         .attr('fill', function(d) {
-            return opt.selectedKey && String(opt.key(d)) === String(opt.selectedKey) ? opt.selectedColor || '#ed9950' : opt.color;
+            return opt.selectedKey && String(opt.key(d)) === String(opt.selectedKey) ? opt.selectedColor || C.orange : opt.color;
         })
         .style('opacity', function(d) {
             return opt.selectedKey && String(opt.key(d)) !== String(opt.selectedKey) ? .62 : .93;

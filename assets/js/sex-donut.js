@@ -23,7 +23,7 @@ function drawSexDonut() {
         cx = w / 2,
         cy = h / 2 - 4,
         r = Math.min(w, h) * .33;
-    var colors = ['#4778de', '#f0a265', '#a5b5c8'];
+    var colors = ['#0d47a1', '#2196f3', '#90caf9'];
     var sorted = rows.slice()
         .sort(function(a, b) {
             return b.hosp - a.hosp;
