@@ -11,6 +11,30 @@
 .focus-line{stroke:#8bb8df;stroke-width:1;stroke-dasharray:3 3}.tip-header{font-weight:750}.tip-value{font-size:15px;font-weight:750;margin-top:3px}.tip-detail{font-size:11px;opacity:.82;margin-top:3px}
 
 /* Keep summary labels and supporting text readable on overview and burden pages. */
+.detail-panel{gap:12px;padding:16px 18px;overflow:auto}
+.detail-panel h2{font-size:17px;margin-bottom:0}
+.detail-panel .detail-select{min-height:40px;flex:none;padding:8px 10px;font-size:15px;font-weight:600}
+.detail-panel .detail-stat{margin:0;gap:12px;flex-wrap:wrap}
+.detail-panel .detail-stat strong{font-size:64px;line-height:1.15;padding-left:8px}
+.detail-panel .detail-stat span{font-size:15px;color:var(--ink)}
+.detail-panel .detail-rows{gap:12px;padding-bottom:2px}
+.detail-panel .detail-rows>div{font-size:15px;align-items:baseline;padding-top:10px;gap:12px}
+.detail-panel .detail-rows strong{font-size:18px;white-space:nowrap}
+@media(max-width:800px),(max-height:700px){
+  .detail-panel{gap:8px;padding:10px 12px}
+  .detail-panel h2{font-size:15px}
+  .detail-panel .detail-stat strong{font-size:48px}
+  .detail-panel .detail-rows{gap:7px}
+  .detail-panel .detail-rows>div{padding-top:6px;font-size:13px}
+  .detail-panel .detail-rows strong{font-size:16px}
+}
+@media(max-width:550px){
+  .detail-panel{padding:8px}
+  .detail-panel .detail-select{font-size:13px;min-width:0;width:100%}
+  .detail-panel .detail-stat{gap:4px}
+  .detail-panel .detail-stat span{font-size:13px}
+  .detail-panel .detail-rows>div{flex-wrap:wrap;gap:3px 8px}
+}
 :is(#page-overview, #page-burden) .kpi-grid{height:auto;min-height:98px}
 :is(#page-overview, #page-burden) .kpi{display:grid;grid-template-columns:1fr auto;align-content:center;align-items:baseline;gap:6px 10px;padding:12px 14px}
 :is(#page-overview, #page-burden) .kpi>span{grid-column:1/-1;color:var(--ink);font-size:15px;font-weight:650;white-space:normal;line-height:1.3}
