@@ -21,12 +21,13 @@ function drawScatterplot() {
     const width = Math.max(300, panel.node()
         .getBoundingClientRect()
         .width);
+    const height = Math.max(130, panel.node().clientHeight);
     const W = Math.max(10, width - margin.left - margin.right);
-    const H = 340 - margin.top - margin.bottom;
+    const H = height - margin.top - margin.bottom;
     const svg = panel.append('svg')
-        .attr('viewBox', [0, 0, width, 340].join(' '))
+        .attr('viewBox', [0, 0, width, height].join(' '))
         .attr('width', width)
-        .attr('height', 340);
+        .attr('height', height);
     const g = svg.append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 

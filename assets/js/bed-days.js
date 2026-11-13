@@ -16,7 +16,7 @@ function drawBedDays() {
         compactYears: true
     };
 
-    var height = opt.height || 235,
+    var height = Math.max(110, document.querySelector(selector).clientHeight),
         margin = {
             top: 22,
             right: 10,

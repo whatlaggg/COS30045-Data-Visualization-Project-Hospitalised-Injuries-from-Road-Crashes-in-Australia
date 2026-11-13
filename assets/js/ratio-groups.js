@@ -24,7 +24,7 @@ function drawRatioGroups() {
     };
 
     var el = document.querySelector(selector),
-        h = opt.height || el.clientHeight || 280;
+        h = Math.max(110, el.clientHeight);
     var margin = {
         top: opt.top || 12,
         right: opt.right || 55,

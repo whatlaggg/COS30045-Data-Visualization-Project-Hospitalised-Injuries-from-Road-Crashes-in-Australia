@@ -42,7 +42,7 @@ async function loadCSV(path) {
     try {
 
         // Fetch the CSV through the local or hosted web server.
-        const rows = await d3.csv(path);
+        const rows = window.dashboardCSV ? d3.csvParse(window.dashboardCSV) : await d3.csv(path);
 
         // Validate column names before parsing any chart data.
         const required = [
@@ -76,7 +76,7 @@ async function loadCSV(path) {
     } catch (error) {
         console.error(error);
         const status = document.getElementById('loading-status');
-        status.textContent = 'Unable to load the CSV. Open this site through VS Code Live Server or Mercury, and check data/dashboard_injuries.csv. ' + error.message;
+        status.textContent = 'Unable to load the dashboard data. ' + error.message;
         status.setAttribute('role', 'alert');
         document.querySelectorAll('button,select')
             .forEach(el => el.disabled = true);

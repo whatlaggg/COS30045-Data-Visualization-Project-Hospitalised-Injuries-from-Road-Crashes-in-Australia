@@ -45,9 +45,6 @@ function setPage(page) {
     if (window.history && window.history.replaceState) {
         window.history.replaceState(null, '', '#' + page);
     } else window.location.hash = page;
-    document.querySelector('.sidebar')
-        .classList.remove('mobile-open');
-    window.scrollTo(0, 0);
     requestAnimationFrame(render);
 }
 // Update the selected year, arrow buttons and visible charts.
@@ -66,21 +63,6 @@ function setYear(year) {
             el.textContent = state.year;
         });
     redrawWithChartFocus(render);
-}
-// Export original CSV fields, including both suppression flags, for this year.
-// Download all source rows for the selected year with their suppression flags.
-function exportYear() {
-    const subset = data.filter(d => d.year === state.year)
-        .map(d => d.raw);
-    const blob = new Blob([d3.csvFormat(subset)], {
-        type: 'text/csv;charset=utf-8;'
-    });
-    const url = URL.createObjectURL(blob),
-        a = document.createElement('a');
-    a.href = url;
-    a.download = 'road_injuries_' + state.year + '.csv';
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 // Populate controls and attach navigation, selection and resize events once.
 function initialiseInteractions() {
@@ -103,38 +85,16 @@ function initialiseInteractions() {
         .addEventListener('click', function() {
             setYear(state.year + 1);
         });
-    document.getElementById('download-btn')
-        .addEventListener('click', exportYear);
     document.querySelectorAll('[data-page]')
         .forEach(function(btn) {
             btn.addEventListener('click', function() {
                 setPage(btn.dataset.page);
             });
         });
-    document.querySelectorAll('[data-go]')
-        .forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                setPage(btn.dataset.go);
-            });
-        });
     document.getElementById('road-user-select')
         .addEventListener('change', function() {
             selectRoadUser(this.value);
         });
-    document.getElementById('menu-toggle')
-        .addEventListener('click', function() {
-            document.querySelector('.sidebar')
-                .classList.toggle('mobile-open');
-        });
-    document.getElementById('brand-link')
-        .addEventListener('click', function(e) {
-            e.preventDefault();
-            setPage('overview');
-        });
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') document.querySelector('.sidebar')
-            .classList.remove('mobile-open');
-    });
     window.addEventListener('hashchange', function() {
         var p = location.hash.replace('#', '');
         if (p !== state.page && ['overview', 'people', 'burden'].indexOf(p) >= 0) setPage(p);
