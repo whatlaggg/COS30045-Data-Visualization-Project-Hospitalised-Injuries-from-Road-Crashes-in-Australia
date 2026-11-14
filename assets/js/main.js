@@ -7,5 +7,8 @@ function render() {
         drawStateHeatmap(); drawSexTrend(); drawAgeGroups(); drawRoadUsers();
     } else if (state.page === 'burden') {
         drawRatioTrend(); updateRoadUserDetail(); drawRatioGroups(); drawScatterplot();
+    } else if (state.page === 'first-nations') {
+        drawFirstNations();
     }
+    updateViewContext();
 }

@@ -7,7 +7,7 @@ function redrawWithChartFocus(draw) {
     draw();
     if (!chart || !row) return;
     const replacement = Array.from(chart.querySelectorAll('[role="button"]'))
-        .find(mark => mark.__data__.year === row.year && mark.__data__.category === row.category);
+        .find(mark => ['year', 'category', 'geography', 'key', 'source', 'population'].every(key => mark.__data__[key] === row[key]));
     if (replacement) replacement.focus({ preventScroll: true });
 }
 
@@ -24,7 +24,7 @@ function selectRoadUser(category) {
 
 // Show the requested chapter, update navigation and redraw its charts.
 function setPage(page) {
-    if (['overview', 'people', 'burden'].indexOf(page) < 0) page = 'overview';
+    if (['overview', 'people', 'burden', 'first-nations'].indexOf(page) < 0) page = 'overview';
     state.page = page;
     hideTip();
     document.querySelectorAll('.page')
@@ -40,7 +40,8 @@ function setPage(page) {
     setText('breadcrumb-page', {
         overview: 'National overview',
         people: 'People & places',
-        burden: 'Hospital burden'
+        burden: 'Hospital burden',
+        'first-nations': 'First Nations'
     } [page]);
     if (window.history && window.history.replaceState) {
         window.history.replaceState(null, '', '#' + page);
@@ -69,6 +70,7 @@ function initialiseInteractions() {
     document.getElementById('sex-state-select').addEventListener('change', function() {
         hideTip();
         drawSexTrend();
+        updateViewContext();
     });
     years.forEach(function(y) {
         var opt = document.createElement('option');
@@ -101,14 +103,14 @@ function initialiseInteractions() {
         });
     window.addEventListener('hashchange', function() {
         var p = location.hash.replace('#', '');
-        if (p !== state.page && ['overview', 'people', 'burden'].indexOf(p) >= 0) setPage(p);
+        if (p !== state.page && ['overview', 'people', 'burden', 'first-nations'].indexOf(p) >= 0) setPage(p);
     });
     var resizeTimer;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(render, 120);
     });
-    state.page = (['overview', 'people', 'burden'].indexOf(location.hash.substring(1)) >= 0 ? location.hash.substring(1) : 'overview');
+    state.page = (['overview', 'people', 'burden', 'first-nations'].indexOf(location.hash.substring(1)) >= 0 ? location.hash.substring(1) : 'overview');
     setYear(2021);
     setPage(state.page);
 }
