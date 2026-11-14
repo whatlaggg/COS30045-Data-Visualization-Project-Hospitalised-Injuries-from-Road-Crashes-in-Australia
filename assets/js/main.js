@@ -10,5 +10,4 @@ function render() {
     } else if (state.page === 'first-nations') {
         drawFirstNations();
     }
-    updateViewContext();
 }

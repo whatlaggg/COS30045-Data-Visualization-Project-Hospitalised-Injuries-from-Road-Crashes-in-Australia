@@ -13,7 +13,9 @@ function drawFirstNations() {
             d.category === category
         ) || {category, hosp: null, year: state.year}
     );
-    const width = Math.max(280, panel.node().clientWidth), height = 300;
+    const width = panel.node().clientWidth;
+    const height = panel.node().clientHeight;
+    if (!width || !height) return;
     const margin = {top: 18, right: 66, bottom: 48, left: 100};
     const W = width - margin.left - margin.right, H = height - margin.top - margin.bottom;
     const svg = panel.append('svg').attr('viewBox', `0 0 ${width} ${height}`)
@@ -22,13 +24,15 @@ function drawFirstNations() {
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
     const x = d3.scaleLinear().domain([0, d3.max(rows, d => d.hosp) || 1]).nice().range([0, W]);
     const y = d3.scaleBand().domain(categories).range([0, H]).padding(0.3);
+    const barHeight = Math.min(56, y.bandwidth());
     xGrid(g, x, H, 4);
     g.append('g').attr('class', 'axis').attr('transform', `translate(0,${H})`)
         .call(d3.axisBottom(x).ticks(4).tickFormat(compact));
     g.append('g').attr('class', 'axis').call(d3.axisLeft(y).tickSize(0));
     const bars = g.selectAll('.residence-bar').data(rows.filter(d => d.hosp !== null))
-        .join('rect').attr('class', 'residence-bar').attr('x', 0).attr('y', d => y(d.category))
-        .attr('width', d => x(d.hosp)).attr('height', y.bandwidth()).attr('fill', C.ink);
+        .join('rect').attr('class', 'residence-bar').attr('x', 0)
+        .attr('y', d => y(d.category) + (y.bandwidth() - barHeight) / 2)
+        .attr('width', d => x(d.hosp)).attr('height', barHeight).attr('fill', C.ink);
     bindTip(bars, d => tip(
         d.category + ' · ' + d.year,
         formatted(d.hosp) + ' hospitalisations',

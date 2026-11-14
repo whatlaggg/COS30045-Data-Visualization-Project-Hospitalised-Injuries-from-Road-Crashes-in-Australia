@@ -30,7 +30,6 @@
     <div id="loading-status" role="status">Loading injury data…</div>
     <section class="page active" id="page-overview" aria-label="National overview">
       <p class="page-intro">Start with the national trend, then compare annual changes in admissions and hospital bed-days.</p>
-      <p class="story-insight" id="insight-overview" aria-live="polite"></p>
       <div class="kpi-grid">
         <article class="kpi"><span>Total hospitalisations</span><strong id="overview-hosp">—</strong><small id="overview-hosp-change">—</small></article>
         <article class="kpi"><span>Total hospital bed-days</span><strong id="overview-days">—</strong><small id="overview-days-change">—</small></article>
@@ -44,7 +43,6 @@
     </section>
     <section class="page" id="page-people" aria-label="People and places">
       <p class="page-intro">Compare published counts across places and groups. Counts reflect population size and are not injury-risk rates.</p>
-      <p class="story-insight" id="insight-people" aria-live="polite"></p>
       <div class="chart-layout people-layout">
         <article class="panel"><h2>Hospitalisations by state and year</h2><p class="chart-note">Darker blue = more hospitalisations. One shared count scale; no population adjustment.</p><div class="chart" id="chart-state-heatmap" role="group" aria-label="Heatmap of hospitalisation counts by state and year"></div></article>
         <article class="panel sex-trend-panel"><div class="sex-trend-header"><h2>Male and female share over time</h2>
@@ -56,7 +54,6 @@
     </section>
     <section class="page" id="page-burden" aria-label="Hospital burden">
       <p class="page-intro">Compare case volume with hospital resource use. Bed-days per case is not a direct clinical severity score.</p>
-      <p class="story-insight" id="insight-burden" aria-live="polite"></p>
       <div class="kpi-grid">
         <article class="kpi"><span>National bed-days</span><strong id="burden-days">—</strong></article>
         <article class="kpi"><span>Bed-days per case</span><strong id="burden-average">—</strong></article>
@@ -75,16 +72,11 @@
     </section>
     <section class="page" id="page-first-nations" aria-label="First Nations hospitalisations">
       <p class="page-intro">Explore hospitalisations among First Nations people by area of usual residence. These categories describe where patients live, not where crashes happened.</p>
-      <p class="story-insight" id="insight-first-nations" aria-live="polite"></p>
       <article class="panel first-nations-panel"><h2>First Nations hospitalisations by residence remoteness</h2>
         <p class="chart-note">Published counts for the selected year. No population or travel-exposure adjustment is available in this view.</p>
         <div class="chart" id="chart-first-nations" role="group" aria-label="First Nations hospitalisation counts by residence remoteness"></div>
       </article>
     </section>
-    <details class="data-table-panel"><summary>Read the current view as a data table</summary><div id="view-data-table"></div></details>
-    <footer class="data-notes"><strong>Reading this data:</strong> hospitalisations are recorded cases, not crash counts. Suppressed values are unavailable, not zero. Age bands have unequal widths. Sex shares use published male + female counts only and do not represent all recorded sex categories. Admission criteria changed in Victoria in 2012 and NSW in 2017; bed-day coding changed in July 2015. These changes affect comparisons over time.
-      <a href="https://www.bitre.gov.au/resource/road-safety/hospitalised-injury" target="_blank" rel="noopener">BITRE source data (2011–2021)</a> · <a href="https://www.bitre.gov.au/sites/default/files/documents/hospitalised-injury-data-dictionary-september-2023.pdf" target="_blank" rel="noopener">Data dictionary</a>
-    </footer>
   </main>
 </div>
 <div class="chart-tooltip" id="chart-tooltip" role="tooltip"></div>
@@ -106,7 +98,6 @@
 <script src="assets/js/sex-trend.js"></script>
 <script src="assets/js/interactions.js"></script>
 <script src="assets/js/first-nations.js"></script>
-<script src="assets/js/view-context.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="data/dashboard-data.js"></script>
 <script src="assets/js/load-data.js"></script>

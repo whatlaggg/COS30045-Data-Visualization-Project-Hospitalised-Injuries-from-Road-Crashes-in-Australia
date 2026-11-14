@@ -70,7 +70,6 @@ function initialiseInteractions() {
     document.getElementById('sex-state-select').addEventListener('change', function() {
         hideTip();
         drawSexTrend();
-        updateViewContext();
     });
     years.forEach(function(y) {
         var opt = document.createElement('option');
