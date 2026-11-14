@@ -119,6 +119,8 @@ function drawScatterplot() {
             selectRoadUser(d.category);
         }
     });
+    // Keep the selected mark visible above overlapping small-count categories.
+    bubbles.filter(d => d.category === state.roadUser).raise();
     var chosen = rows.filter(function(d) {
         return d.category === state.roadUser;
     })[0];

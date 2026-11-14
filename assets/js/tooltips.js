@@ -14,20 +14,34 @@ function moveTip(event) {
         .style('top', Math.max(10, Math.min(py + 15, window.innerHeight - box.height - 12)) + 'px');
 }
 function hideTip() {
-    tooltip.style('opacity', 0);
+    clearTimeout(tooltipHideTimer);
+    tooltip.style('opacity', 0).style('visibility', 'hidden');
 }
+
+let tooltipHideTimer;
+function scheduleTipHide() {
+    clearTimeout(tooltipHideTimer);
+    tooltipHideTimer = setTimeout(hideTip, 250);
+}
+tooltip.on('pointerenter', () => clearTimeout(tooltipHideTimer))
+    .on('pointerleave', scheduleTipHide);
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') hideTip();
+});
 // Attach pointer and keyboard tooltip events to the chart marks.
 function bindTip(selection, makeHTML) {
     selection.attr('tabindex', 0)
         .attr('aria-label', d => makeHTML(d)
             .replace(/<[^>]*>/g, ' '))
         .on('pointerenter.tooltip focus.tooltip', function(event, d) {
+            clearTimeout(tooltipHideTimer);
             tooltip.html(makeHTML(d))
-                .style('opacity', 1);
+                .style('opacity', 1).style('visibility', 'visible');
             moveTip(event);
         })
         .on('pointermove.tooltip', moveTip)
-        .on('pointerleave.tooltip blur.tooltip', hideTip)
+        .on('pointerleave.tooltip', scheduleTipHide)
+        .on('blur.tooltip', hideTip)
         .on('keydown.tooltip', function(event) {
             if (event.key === 'Escape') hideTip();
         });
