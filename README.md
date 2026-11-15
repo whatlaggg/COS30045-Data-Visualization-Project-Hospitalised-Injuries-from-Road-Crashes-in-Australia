@@ -1,9 +1,23 @@
-# Australian road injury dashboard
+Australian Road Injury Dashboard
 
-Open `index.html` in Chrome or Edge. All scripts and data are bundled locally; no web server or internet connection is needed. The ZIP contains a multi-file D3 v7 project.
+Open index.html in Chrome or Edge through visual studio live server extension. All scripts and data are bundled locally; . The ZIP contains a multi-file D3 v7 project, featuring dynamic data transitions and animations.
 
-Use the three page buttons and year selector to explore 2011–2021. The overview heatmap and state heatmap allow clicking a year; the hospital burden plots link to the road-user detail card. Hover or focus on marks for exact values.
+How to use the dashboard
 
-**Data interpretation:** Hospitalisations and bed-days are published counts, not road-crash totals or population-adjusted rates. The age bands have unequal widths. Sex shares are calculated within each state from published male and female counts only. Suppressed values are excluded from chart calculations. Longer stays measure hospital resource use and are not a direct clinical severity score.
+Navigation: Use the three page buttons and the year selector to explore data from 2011–2021.
 
-`data/dashboard_injuries.csv` is the source dataset. `data/dashboard-data.js` embeds the same CSV for direct file opening. After editing the CSV, regenerate that file from its contents. The code remains split into chart-specific files under `assets/js`.
+Interactivity: The overview heatmap and state heatmap allow you to click a specific year. The hospital burden plots link directly to the road-user detail card.
+
+Details: Hover or focus on any chart marks to see exact values.
+
+Data interpretation
+
+Counts vs. Rates: Hospitalisations and bed-days are published counts, not road-crash totals or population-adjusted rates.
+
+Age Bands: The age bands have unequal widths.
+
+Sex Shares: These are calculated within each state from published male and female counts only.
+
+Exclusions: Suppressed values are excluded from chart calculations.
+
+Severity: Longer stays measure hospital resource use and are not a direct clinical severity score.

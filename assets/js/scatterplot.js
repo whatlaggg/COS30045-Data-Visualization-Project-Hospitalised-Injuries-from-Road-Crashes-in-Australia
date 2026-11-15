@@ -84,9 +84,6 @@ function drawScatterplot() {
         .attr('cy', function(d) {
             return y(d.days);
         })
-        .attr('r', function(d) {
-            return d.category === state.roadUser ? 10 : 7;
-        })
         .attr('fill', function(d) {
             return d.category === state.roadUser ? C.orange : C.blue;
         })
@@ -103,6 +100,15 @@ function drawScatterplot() {
         .attr('tabindex', 0)
         .attr('aria-label', function(d) {
             return d.category + ': ' + formatted(d.hosp) + ' hospitalisations, ' + formatted(d.days) + ' bed-days';
+        })
+        .attr('r', 0); // Animation start: radius 0
+
+    // Animate the bubbles popping in with an elastic bounce
+    bubbles.transition()
+        .duration(800)
+        .ease(d3.easeElasticOut)
+        .attr('r', function(d) {
+            return d.category === state.roadUser ? 10 : 7;
         });
 
     bindTip(bubbles, function(d) {
@@ -119,11 +125,14 @@ function drawScatterplot() {
             selectRoadUser(d.category);
         }
     });
+    
     // Keep the selected mark visible above overlapping small-count categories.
     bubbles.filter(d => d.category === state.roadUser).raise();
+    
     var chosen = rows.filter(function(d) {
         return d.category === state.roadUser;
     })[0];
+    
     if (chosen) {
         var bx = x(chosen.hosp),
             by = y(chosen.days);
@@ -132,6 +141,10 @@ function drawScatterplot() {
             .attr('y', Math.max(12, by - 17))
             .attr('text-anchor', 'middle')
             .attr('class', 'chart-selected-text')
-            .text(chosen.category.length > 19 ? chosen.category.slice(0, 18) + '…' : chosen.category);
+            .text(chosen.category.length > 19 ? chosen.category.slice(0, 18) + '…' : chosen.category)
+            .style('opacity', 0) // Animation start: invisible text
+            .transition() // Fade in the label
+            .duration(800)
+            .style('opacity', 1);
     }
 }
