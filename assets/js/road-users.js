@@ -68,6 +68,7 @@ function drawRoadUsers() {
         .call(d3.axisBottom(x)
             .ticks(4)
             .tickFormat(opt.axisFormat || compact));
+            
     g.selectAll('.bar-label')
         .data(rows)
         .join('text')
@@ -90,27 +91,38 @@ function drawRoadUsers() {
         .attr('y', function(d) {
             return y(opt.key(d));
         })
-        .attr('width', function(d) {
-            return x(opt.value(d) || 0);
-        })
         .attr('height', y.bandwidth())
         .attr('rx', 4)
         .style('fill', function(d, i) {
             return opt.dynamicColor ? opt.dynamicColor(d, i) : opt.color;
         })
-        .style('cursor', opt.onClick ? 'pointer' : 'crosshair');
+        .style('cursor', opt.onClick ? 'pointer' : 'crosshair')
+        .attr('width', 0); // Animation start: 0 width
+
+    // Animate the bars growing from left to right
+    bars.transition()
+        .duration(800)
+        .ease(d3.easeCubicOut)
+        .attr('width', function(d) {
+            return x(opt.value(d) || 0);
+        });
+
     g.selectAll('.value-label')
         .data(rows)
         .join('text')
         .attr('class', 'chart-label-strong')
-        .attr('x', function(d) {
-            return x(opt.value(d) || 0) + 7;
-        })
         .attr('y', function(d) {
             return y(opt.key(d)) + y.bandwidth() / 2 + 3.5;
         })
         .text(function(d) {
             return opt.valueFormat ? opt.valueFormat(opt.value(d)) : formatted(opt.value(d));
+        })
+        .attr('x', 7) // Animation start: start at the very left edge of the bar
+        .transition() // Animate the labels sliding right along with the bars
+        .duration(800)
+        .ease(d3.easeCubicOut)
+        .attr('x', function(d) {
+            return x(opt.value(d) || 0) + 7;
         });
 
     bindTip(bars, function(d) {

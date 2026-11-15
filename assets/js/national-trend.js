@@ -105,17 +105,34 @@ function drawNationalTrend() {
         .attr('offset', '100%')
         .attr('stop-color', opt.color)
         .attr('stop-opacity', .01);
+        
+    // Area Animation: Fade in
     g.append('path')
         .datum(rows)
         .attr('d', area)
-        .style('fill', 'url(#' + gradId + ')');
-    g.append('path')
+        .style('fill', 'url(#' + gradId + ')')
+        .style('opacity', 0)
+        .transition()
+        .duration(1500)
+        .style('opacity', 1);
+        
+    // Line Animation: Draw left to right
+    var linePath = g.append('path')
         .datum(rows)
         .attr('d', line)
         .style('fill', 'none')
         .style('stroke', opt.color)
         .style('stroke-width', 2.8)
         .style('stroke-linejoin', 'round');
+        
+    var totalLength = linePath.node().getTotalLength();
+    linePath
+        .attr('stroke-dasharray', totalLength + " " + totalLength)
+        .attr('stroke-dashoffset', totalLength)
+        .transition()
+        .duration(1500)
+        .ease(d3.easeSinInOut)
+        .attr('stroke-dashoffset', 0);
 
     // Highlight the selected year on the trend.
     var selected = rows.filter(function(d) {
@@ -124,25 +141,33 @@ function drawNationalTrend() {
     if (selected && opt.value(selected) != null) {
         var px = x(selected.year),
             py = y(opt.value(selected));
-        g.append('line')
+        var focusLine = g.append('line')
             .attr('class', 'focus-line')
             .attr('x1', px)
             .attr('x2', px)
             .attr('y1', py)
-            .attr('y2', H);
-        g.append('circle')
+            .attr('y2', H)
+            .style('opacity', 0);
+        var focusCirc = g.append('circle')
             .attr('cx', px)
             .attr('cy', py)
             .attr('r', 7)
             .attr('fill', 'white')
             .attr('stroke', opt.color)
-            .attr('stroke-width', 3);
-        g.append('text')
+            .attr('stroke-width', 3)
+            .style('opacity', 0);
+        var focusText = g.append('text')
             .attr('class', 'chart-selected-text')
             .attr('x', Math.max(36, Math.min(W - 27, px)))
             .attr('y', Math.max(10, py - 15))
             .attr('text-anchor', 'middle')
-            .text(opt.markFormat ? opt.markFormat(opt.value(selected)) : formatted(opt.value(selected)));
+            .text(opt.markFormat ? opt.markFormat(opt.value(selected)) : formatted(opt.value(selected)))
+            .style('opacity', 0);
+            
+        // Fade in focus elements
+        focusLine.transition().duration(1500).style('opacity', 1);
+        focusCirc.transition().duration(1500).style('opacity', 1);
+        focusText.transition().duration(1500).style('opacity', 1);
     }
     var circles = g.selectAll('.line-hit')
         .data(rows.filter(function(d) {
@@ -161,7 +186,12 @@ function drawNationalTrend() {
         .attr('stroke', opt.color)
         .attr('stroke-width', d => d.year === state.year ? 3 : 1.5)
         .attr('aria-pressed', d => d.year === state.year)
-        .style('cursor', 'pointer');
+        .style('cursor', 'pointer')
+        .style('opacity', 0); // Start invisible
+        
+    // Fade in hit points
+    circles.transition().duration(1500).style('opacity', 1);
+
     // Choose a focus year directly from an annual mark.
     circles.attr('role', 'button')
         .on('click.year', (event, row) => setYear(row.year))

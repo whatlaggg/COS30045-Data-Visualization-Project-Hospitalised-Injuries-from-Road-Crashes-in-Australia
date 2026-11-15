@@ -22,6 +22,19 @@ function drawSexTrend() {
     const m = {top: 27, right: 12, bottom: 27, left: 35};
     const W = Math.max(10, width - m.left - m.right), H = Math.max(10, height - m.top - m.bottom);
     const svg = panel.append('svg').attr('viewBox', `0 0 ${width} ${height}`).attr('width', width).attr('height', height);
+    
+    // Set up a clip-path for left-to-right animation that protects the dashed lines
+    const clipId = 'sex-trend-clip';
+    svg.append('defs').append('clipPath')
+        .attr('id', clipId)
+        .append('rect')
+        .attr('width', 0)
+        .attr('height', height)
+        .transition()
+        .duration(1500)
+        .ease(d3.easeSinInOut)
+        .attr('width', width);
+
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
     const x = d3.scaleLinear().domain(d3.extent(years)).range([0, W]);
     const y = d3.scaleLinear().domain([0, 100]).range([H, 0]);
@@ -30,26 +43,41 @@ function drawSexTrend() {
     const ticks = W < 230 ? [years[0], years[Math.floor(years.length / 2)], years[years.length - 1]] : years.filter(d => d % 2 === 1);
     g.append('g').attr('class', 'axis').attr('transform', `translate(0,${H})`)
         .call(d3.axisBottom(x).tickValues(ticks).tickFormat(d3.format('d')));
-    g.append('line').attr('class', 'focus-line').attr('x1', x(state.year)).attr('x2', x(state.year)).attr('y1', 0).attr('y2', H);
+        
+    g.append('line').attr('class', 'focus-line')
+        .attr('x1', x(state.year)).attr('x2', x(state.year))
+        .attr('y1', 0).attr('y2', H)
+        .style('opacity', 0)
+        .transition().duration(1500).style('opacity', 1);
+        
     for (const [i, sex] of ['Male', 'Female'].entries()) {
         const color = sex === 'Male' ? '#0d47a1' : '#2196f3';
         const dash = sex === 'Female' ? '6 3' : null;
         const line = d3.line().defined(d => d[sex] != null).x(d => x(d.year)).y(d => y(d[sex]));
+        
         g.append('path').datum(points).attr('class', 'sex-trend-line').attr('d', line)
-            .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2.5).attr('stroke-dasharray', dash);
+            .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2.5).attr('stroke-dasharray', dash)
+            .attr('clip-path', `url(#${clipId})`); // Attach animation clip-path here
+            
         const legendX = i * 83;
         g.append('line').attr('x1', legendX).attr('x2', legendX + 18).attr('y1', -13).attr('y2', -13)
             .attr('stroke', color).attr('stroke-width', 2.5).attr('stroke-dasharray', dash);
         g.append('text').attr('class', 'chart-label').attr('x', legendX + 23).attr('y', -10).text(sex);
+        
         const marks = g.selectAll('.sex-point-' + sex).data(points.filter(d => d[sex] != null).map(d => ({...d, category: sex})))
             .join('circle').attr('class', 'sex-point-' + sex).attr('cx', d => x(d.year)).attr('cy', d => y(d[sex]))
             .attr('r', d => d.year === state.year ? 5 : 3.5).attr('fill', d => d.year === state.year ? 'white' : color)
             .attr('stroke', color).attr('stroke-width', 2).attr('role', 'button')
             .attr('aria-pressed', d => d.year === state.year).style('cursor', 'pointer')
+            .style('opacity', 0) // Hide points initially
             .on('click.year', (event, d) => setYear(d.year))
             .on('keydown.year', (event, d) => {
                 if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setYear(d.year); }
             });
+            
+        // Fade in data points
+        marks.transition().duration(1500).style('opacity', 1);
+
         bindTip(marks, d => tip(`${region} · ${sex} · ${d.year}`, `${d[sex].toFixed(1)}%`,
             `${formatted(sex === 'Male' ? d.maleCount : d.femaleCount)} of ${formatted(d.total)} published male + female cases`));
     }

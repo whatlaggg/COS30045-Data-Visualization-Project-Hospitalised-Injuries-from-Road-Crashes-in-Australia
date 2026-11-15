@@ -1,4 +1,5 @@
 "use strict";
+
 /* ========================================================
    Hospitalisations by age group
    ======================================================== */
@@ -85,12 +86,6 @@ function drawAgeGroups() {
             return x(String(opt.key(d)));
         })
         .attr('width', x.bandwidth())
-        .attr('y', function(d) {
-            return y(opt.value(d) || 0);
-        })
-        .attr('height', function(d) {
-            return H - y(opt.value(d) || 0);
-        })
         .attr('rx', 3)
         .attr('fill', function(d) {
             return opt.selectedKey && String(opt.key(d)) === String(opt.selectedKey) ? opt.selectedColor || C.orange : opt.color;
@@ -98,10 +93,23 @@ function drawAgeGroups() {
         .style('opacity', function(d) {
             return opt.selectedKey && String(opt.key(d)) !== String(opt.selectedKey) ? .62 : .93;
         })
-        .style('cursor', 'crosshair');
+        .style('cursor', 'crosshair')
+        .attr('y', H)
+        .attr('height', 0);
+
+    bars.transition()
+        .duration(800)
+        .ease(d3.easeCubicOut)
+        .attr('y', function(d) {
+            return y(opt.value(d) || 0);
+        })
+        .attr('height', function(d) {
+            return H - y(opt.value(d) || 0);
+        });
 
     bindTip(bars, function(d) {
         return tip(String(opt.key(d)), formatted(opt.value(d)), opt.tooltipLabel || '');
     });
+    
     axisStyles(svg);
 }
