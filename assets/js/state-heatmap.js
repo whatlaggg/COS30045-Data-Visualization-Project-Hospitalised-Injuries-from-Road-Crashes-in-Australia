@@ -35,13 +35,18 @@ function drawStateHeatmap() {
         .attr('role', 'button')
         .attr('tabindex', 0)
         .attr('aria-label', d => `${d.geography}, ${d.year}: ${formatted(d.hosp)} hospitalisations`)
-        .on('click', (event, d) => setYear(d.year))
+        .on('click', (event, d) => {
+            if (state.year === d.year) return; // Prevent same-click redraw
+            setYear(d.year);
+        })
         .on('keydown', (event, d) => {
             if (event.key === 'Enter' || event.key === ' ') {
+                if (state.year === d.year) return; // Prevent same-click redraw
                 event.preventDefault();
                 setYear(d.year);
             }
         });
+        
     bindTip(marks, d => tip(
         `${d.geography} · ${d.year}`,
         formatted(d.hosp) + ' hospitalisations',

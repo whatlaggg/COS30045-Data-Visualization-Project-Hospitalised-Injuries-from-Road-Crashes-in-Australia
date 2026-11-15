@@ -8,7 +8,7 @@ function drawRatioGroups() {
         .filter(verified)
         .filter(d => d.hosp > 0)
         .sort((a, b) => ratio(b) - ratio(a))
-        .slice(0, 8);
+        .slice(0, 8); // Top 8 
     const opt = {
         height: 235,
         key: d => d.category,
@@ -16,9 +16,9 @@ function drawRatioGroups() {
         valueFormat: decimals,
         axisFormat: n => n.toFixed(0),
         color: C.blue,
-        left: 166,
+        left: 220, 
         right: 45,
-        truncate: 29,
+        truncate: 35, 
         tipDetail: d => formatted(d.hosp) + ' cases · ' + formatted(d.days) + ' bed-days',
         onClick: d => selectRoadUser(d.category)
     };
@@ -26,29 +26,41 @@ function drawRatioGroups() {
     var el = document.querySelector(selector),
         h = Math.max(110, el.clientHeight);
     var margin = {
-        top: opt.top || 12,
+        top: 25, 
         right: opt.right || 55,
         bottom: 26,
         left: opt.left || 145
     };
 
     const panel = d3.select(selector);
-    panel.selectAll('*')
-        .remove();
-    const width = Math.max(300, panel.node()
-        .getBoundingClientRect()
-        .width);
+    
+    const width = Math.max(300, panel.node().clientWidth);
     const W = Math.max(10, width - margin.left - margin.right);
     const H = h - margin.top - margin.bottom;
-    const svg = panel.append('svg')
-        .attr('viewBox', [0, 0, width, h].join(' '))
-        .attr('width', width)
-        .attr('height', h);
-    const g = svg.append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+    // --- NEW UPDATE LOGIC ---
+    const previousYear = panel.node().dataset.lastRenderedYear;
+    const currentYear = String(state.year);
+    
+    const isFirstRender = panel.select('svg').empty();
+    const previousWidth = isFirstRender ? null : panel.select('svg').attr('width');
+    const isResized = previousWidth !== null && previousWidth !== String(width);
+    
+    // 1. If only the road user was clicked (year and size are identical)
+    const isRoadUserClickOnly = !isFirstRender && (previousYear === currentYear) && !isResized;
+    // 2. If the year changed from the dropdown/timeline
+    const isYearUpdateOnly = !isFirstRender && (previousYear !== currentYear) && !isResized;
+
+    // INSTANT EXIT: Just update colors and stop. No transitions!
+    if (isRoadUserClickOnly) {
+        panel.selectAll('.value-bar')
+            .style('fill', d => d.category === state.roadUser ? C.ink : opt.color)
+            .attr('aria-pressed', d => d.category === state.roadUser);
+        return; 
+    }
+
     if (!rows.length) {
-        d3.select(selector)
-            .html('<div class="chart-empty">No verified data for this view</div>');
+        d3.select(selector).html('<div class="chart-empty">No verified data for this view</div>');
         return;
     }
 
@@ -64,76 +76,119 @@ function drawRatioGroups() {
         .rangeRound([0, H])
         .padding(0.24);
 
-    // Draw grid lines and axes to support value comparison.
-    xGrid(g, x, H, 4);
-    g.append('g')
-        .attr('class', 'axis')
-        .attr('transform', 'translate(0,' + H + ')')
-        .call(d3.axisBottom(x)
-            .ticks(4)
-            .tickFormat(opt.axisFormat || compact));
+    let g, svg, gridGroup;
+
+    if (!isYearUpdateOnly) {
+        panel.selectAll('*').remove();
+        svg = panel.append('svg')
+            .attr('viewBox', [0, 0, width, h].join(' '))
+            .attr('width', width)
+            .attr('height', h);
+        g = svg.append('g')
+            .attr('class', 'chart-content')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        gridGroup = g.append('g').attr('class', 'grid-group'); 
+        g.append('g').attr('class', 'x-axis').attr('transform', 'translate(0,' + H + ')');
+    } else {
+        svg = panel.select('svg');
+        g = panel.select('.chart-content');
+        gridGroup = g.select('.grid-group');
+    }
+
+    gridGroup.selectAll('*').remove();
+    xGrid(gridGroup, x, H, 4); 
+
+    g.select('.x-axis').transition().duration(800)
+        .call(d3.axisBottom(x).ticks(4).tickFormat(opt.axisFormat || compact));
+
+    const t = d3.transition().duration(800).ease(d3.easeCubicOut);
+
+    // Y-Axis Labels
     g.selectAll('.bar-label')
-        .data(rows)
-        .join('text')
-        .attr('class', 'chart-label')
-        .attr('x', -10)
-        .attr('y', function(d) {
-            return y(opt.key(d)) + y.bandwidth() / 2 + 3.5;
-        })
-        .attr('text-anchor', 'end')
-        .text(function(d) {
-            var s = opt.key(d);
-            return s.length > (opt.truncate || 25) ? s.slice(0, (opt.truncate || 25) - 1) + '…' : s;
-        });
+        .data(rows, opt.key)
+        .join(
+            enter => enter.append('text')
+                .attr('class', 'bar-label chart-label')
+                .attr('x', -10)
+                .attr('y', d => y(opt.key(d)) + y.bandwidth() / 2 + 3.5)
+                .attr('text-anchor', 'end')
+                .text(d => {
+                    var s = opt.key(d);
+                    return s.length > (opt.truncate || 25) ? s.slice(0, (opt.truncate || 25) - 1) + '…' : s;
+                })
+                .style('opacity', 0)
+                .call(e => e.transition(t).style('opacity', 1)),
+            update => update.call(u => u.transition(t)
+                .style('opacity', 1) 
+                .attr('y', d => y(opt.key(d)) + y.bandwidth() / 2 + 3.5)),
+            exit => exit.call(e => e.transition(t).style('opacity', 0).remove())
+        );
 
+    // Bars
     var bars = g.selectAll('.value-bar')
-        .data(rows)
-        .join('rect')
-        .attr('class', 'value-bar')
-        .attr('x', 0)
-        .attr('y', function(d) {
-            return y(opt.key(d));
-        })
-        .attr('width', function(d) {
-            return x(opt.value(d) || 0);
-        })
-        .attr('height', y.bandwidth())
-        .attr('rx', 4)
-        .style('fill', function(d, i) {
-            return d.category === state.roadUser ? C.ink : opt.color;
-        })
-        .attr('aria-pressed', d => d.category === state.roadUser)
-        .style('cursor', opt.onClick ? 'pointer' : 'crosshair');
-    g.selectAll('.value-label')
-        .data(rows)
-        .join('text')
-        .attr('class', 'chart-label-strong')
-        .attr('x', function(d) {
-            return x(opt.value(d) || 0) + 7;
-        })
-        .attr('y', function(d) {
-            return y(opt.key(d)) + y.bandwidth() / 2 + 3.5;
-        })
-        .text(function(d) {
-            return opt.valueFormat ? opt.valueFormat(opt.value(d)) : formatted(opt.value(d));
-        });
+        .data(rows, opt.key)
+        .join(
+            enter => enter.append('rect')
+                .attr('class', 'value-bar')
+                .attr('x', 0)
+                .attr('y', d => y(opt.key(d)))
+                .attr('height', y.bandwidth())
+                .attr('rx', 4)
+                .attr('width', 0)
+                .style('opacity', 0)
+                .style('fill', d => d.category === state.roadUser ? C.ink : opt.color)
+                .style('cursor', opt.onClick ? 'pointer' : 'crosshair')
+                .call(e => e.transition(t).style('opacity', 1).attr('width', d => x(opt.value(d) || 0))),
+            update => update.call(u => u.transition(t)
+                .style('opacity', 1) 
+                .attr('y', d => y(opt.key(d)))
+                .attr('width', d => x(opt.value(d) || 0))
+                .style('fill', d => d.category === state.roadUser ? C.ink : opt.color)),
+            exit => exit.call(e => e.transition(t).style('opacity', 0).attr('width', 0).remove())
+        );
 
+    // Value Labels
+    g.selectAll('.value-label')
+        .data(rows, opt.key)
+        .join(
+            enter => enter.append('text')
+                .attr('class', 'value-label chart-label-strong')
+                .attr('y', d => y(opt.key(d)) + y.bandwidth() / 2 + 3.5)
+                .text(d => opt.valueFormat ? opt.valueFormat(opt.value(d)) : formatted(opt.value(d)))
+                .attr('x', 7) 
+                .style('opacity', 0)
+                .call(e => e.transition(t).style('opacity', 1).attr('x', d => x(opt.value(d) || 0) + 7)),
+            update => update.call(u => u.transition(t)
+                .style('opacity', 1) 
+                .attr('y', d => y(opt.key(d)) + y.bandwidth() / 2 + 3.5)
+                .attr('x', d => x(opt.value(d) || 0) + 7)
+                .text(d => opt.valueFormat ? opt.valueFormat(opt.value(d)) : formatted(opt.value(d)))),
+            exit => exit.call(e => e.transition(t).style('opacity', 0).attr('x', 0).remove())
+        );
+
+    // Rebind tooltips and clicks on updates
     bindTip(bars, function(d) {
         return tip(opt.key(d), opt.valueFormat ? opt.valueFormat(opt.value(d)) : formatted(opt.value(d)), opt.tipDetail ? opt.tipDetail(d) : opt.tooltipLabel || '');
     });
 
-    // Connect category selection to the detail panel and linked chart.
     if (opt.onClick) {
         bars.attr('role', 'button')
             .on('keydown.activate', function(event, d) {
                 if (event.key === 'Enter' || event.key === ' ') {
+                    if (state.roadUser === d.category) return;
                     event.preventDefault();
                     opt.onClick(d);
                 }
+            })
+            .on('click', function(event, d) {
+                if (state.roadUser === d.category) return;
+                opt.onClick(d);
             });
-        bars.on('click', function(event, d) {
-            opt.onClick(d);
-        });
     }
-    axisStyles(svg);
+
+    bars.attr('aria-pressed', d => d.category === state.roadUser);
+    
+    if (!isYearUpdateOnly) axisStyles(svg);
+    panel.node().dataset.lastRenderedYear = currentYear;
 }
